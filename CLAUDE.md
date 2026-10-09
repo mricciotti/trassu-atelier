@@ -19,7 +19,8 @@ npm run build:demo   dist-demo/index.html (arquivo único com imagens embutidas,
 - Tailwind v4 via `@tailwindcss/vite`; tokens em `src/index.css` (`:root` + `@theme inline`), com modo escuro
 - lucide-react para ícones
 - vite-plugin-singlefile só no modo `demo`
-- Rotas por hash (`#/`, `#/catalogo`, `#/produto/:id`, `#/admin`) em `src/hooks/useHashRoute.ts`
+- Rotas por hash em `src/hooks/useHashRoute.ts`: `#/`, `#/catalogo`, `#/catalogo/:categoria` (biscoitos, porcelanas, garrafas, presentes), `#/atelier`, `#/encomendas`, `#/encomendas/:secao` (passo-a-passo, pagamento, cuidados, duvidas), `#/produto/:id`, `#/admin`. Hashes antigos (`#/sobre`, `#/cuidados`…) redirecionam
+- Mobile first: a maioria do público acessa pelo celular. Barra de navegação inferior abaixo de `lg`, barra fixa de total + "Adicionar ao pedido" na página de produto, grade de 2 colunas no catálogo
 
 ## Estrutura
 
@@ -28,16 +29,20 @@ src/
   App.tsx                     estado global: rota, carrinho, estado do admin, toast
   types.ts                    Product, Variant, PersonalizationField, CartItem, AdminState, Route
   data/
-    catalog.ts                catálogo base (9 produtos) com fotos importadas
+    catalog.ts                catálogo base (10 produtos, fiel ao PDF), categorias com slug/foto/texto
     fields.ts                 presets de campos de personalização, ocasiões, temas padrão, opções de entrega
-    content.ts                marca, textos institucionais, FAQ, cuidados, galeria
+    content.ts                marca, história, passos, FAQ, cuidados, entrega, galeria
   screens/
-    HomeScreen.tsx            capa, destaques, catálogo, como funciona, sobre, galeria, cuidados, FAQ
+    HomeScreen.tsx            capa, categorias, destaques, teaser da história, banner arte exclusiva, CTA
+    CatalogScreen.tsx         catálogo com filtro por categoria na URL
+    AtelierScreen.tsx         história completa e galeria
+    InfoScreen.tsx            como encomendar, pagamento e entrega, cuidados, dúvidas
     ProductScreen.tsx         página do produto com variantes, personalização, mínimo e extra
     AdminScreen.tsx           painel: lista de produtos, editor, temas
   components/
-    Header, Footer, BrandMark, ProductCard, CatalogSection, CartDrawer,
-    PersonalizationFields, QuantitySelector, Toast, WhatsAppFab, WatermarkOverlay
+    Header, BottomNav, navigation.ts, Footer, BrandMark, ProductCard, SectionHeading, Accordion,
+    layoutStyles.ts, fieldStyles.ts, CartDrawer, PersonalizationFields, QuantitySelector,
+    Toast, WhatsAppFab, WatermarkOverlay
     admin/ AdminProductRow, ProductEditor, ThemesPanel, Toggle
   hooks/ useCart.ts (localStorage `trassu-pedido`), useHashRoute.ts
   utils/ adminCatalog.ts, whatsapp.ts, format.ts, image.ts, storage.ts
@@ -45,8 +50,11 @@ src/
 
 ## Regras de negócio
 
-- Não há pagamento no site. O carrinho gera uma mensagem e abre `wa.me/5511966521589`; frete, prazo e pagamento (PIX ou cartão via Infinity Pay, parcelamento a partir de 6%) são acertados no WhatsApp
-- Valores são "estimados"; variantes com `priceFrom` aparecem como "a partir de"
+- Não há pagamento no site. O carrinho gera uma mensagem e abre `wa.me/5511966521589`; frete, prazo e pagamento (PIX ou cartão via Infinity Pay, parcelamento a partir de 4%) são acertados no WhatsApp
+- O PDF do catálogo é a fonte de verdade para produtos, preços e textos. Não inventar preços
+- Valores são "estimados"; aparecem como "a partir de" quando há `priceFrom` ou variantes com preços diferentes
+- "Para presentear" são os 4 kits do PDF (Modelo 1 a 4: R$ 69, 119, 129, a partir de 149), todos com caixa MDF, palha, chiffon e lapela de flores secas
+- Garrafa Entre-Guias: com canudo (600 ml R$ 99, 900 ml R$ 129) ou com infusor (600 ml R$ 99, 1000 ml R$ 139)
 - `minQty` e `step` por produto (Carimbadinhos: mínimo 50, de 10 em 10, extra de R$ 40 pelo carimbo exclusivo)
 - Produto com `active: false` aparece como "Indisponível no momento" e a página troca o formulário por um botão de WhatsApp
 - `featured` alimenta a seção "Destaques do atelier"
@@ -63,13 +71,14 @@ Funcionalidades: editar preço por variante e pedido mínimo inline (salva no bl
 
 ## Identidade visual
 
-Vem do catálogo em PDF da loja. Lora (títulos) + DM Sans (corpo). Chumbo `#3A3C3F`/`#4E5053`, papel `#FCFBF9`, linho `#F2EDE7`, sálvia `#BDBCB1`, rosa `#E6C3C8`/`#9E6A73`, ouro `#A88453`, WhatsApp `#2F6B4F`. A capa reproduz o logo com pincelada (`mix-blend-mode: multiply`) e mantém fundo claro no modo escuro (tokens `cover`).
+Vem do catálogo em PDF da loja. Lora (títulos) + DM Sans (corpo). Chumbo `#3A3C3F`/`#4E5053`, papel `#FCFBF9`, linho `#F2EDE7`, sálvia `#BDBCB1`, rosa `#E6C3C8`/`#9E6A73`, ouro `#A88453`, WhatsApp `#2F6B4F`. A capa reproduz o logo com pincelada (`mix-blend-mode: multiply`) e mantém fundo claro no modo escuro (tokens `cover`). Estilos de elemento em `index.css` ficam em `@layer base`; fora de layer eles sobrescrevem as utilities do Tailwind v4.
 
 ## Pendências
 
 - Marca d'água "DEMONSTRAÇÃO": desligar em `SHOW_WATERMARK` (`App.tsx`) quando for para produção
 - Lista de temas padrão é genérica; confirmar com o atelier
-- Adesivo e Mini buquê usam a mesma foto
+- Fotos próprias para cada kit "Para presentear" (hoje Modelos 1/2 usam `caixa.jpg` e 3/4 usam `buque.jpg`) e para a garrafa com infusor
+- Nomes dos kits ("Presente Modelo 1"…) seguem o PDF; confirmar se o atelier quer nomes mais descritivos
 - Sem depoimentos reais ainda (não inventar)
 - Painel sem login e sem persistência real: próximo passo é back-end (ver abaixo)
 

@@ -50,4 +50,6 @@ export const defaultThemes = [
   'Nossa Senhora Aparecida',
 ];
 
-export const deliveryOptions = ['Retirada em Indaiatuba', 'Motoboy (Indaiatuba e região)', 'Correios'];
+export const deliveryOptions = ['Retirada em Indaiatuba', 'Motoboy ou Uber (Indaiatuba e região)', 'Correios ou transportadora'];
+
+export const shippingOption = 'Correios ou transportadora';

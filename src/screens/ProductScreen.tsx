@@ -3,6 +3,7 @@ import {useMemo, useState} from 'react';
 import {PersonalizationFields} from '../components/PersonalizationFields';
 import {QuantitySelector} from '../components/QuantitySelector';
 import {WhatsAppIcon} from '../components/WhatsAppIcon';
+import {categoryDetails} from '../data/catalog';
 import type {CartItem, Product, Route} from '../types';
 import {formatCurrency} from '../utils/format';
 import {whatsappUrl} from '../utils/whatsapp';
@@ -74,30 +75,30 @@ export function ProductScreen({product, themes, onAddToCart, onNavigate}: Props)
     setQuantity(product.minQty);
   }
 
+  const categorySlug = categoryDetails[product.category]?.slug;
+
   return (
-    <main className="mx-auto w-[min(1180px,100%-2.5rem)] pb-20 pt-6">
-      <nav aria-label="Navegação" className="mb-6 flex flex-wrap items-center gap-2 text-sm text-muted">
-        <button onClick={() => onNavigate({page: 'home', section: 'catalogo'})} className="inline-flex cursor-pointer items-center gap-1.5 hover:text-ink">
+    <main className="mx-auto w-[min(1180px,100%-2.5rem)] pb-12 pt-4 md:pb-20 md:pt-6">
+      <nav aria-label="Navegação" className="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted md:mb-6">
+        <button onClick={() => onNavigate({page: 'catalog', category: categorySlug})} className="inline-flex min-h-10 cursor-pointer items-center gap-1.5 hover:text-ink">
           <ArrowLeft className="size-4" />
-          Catálogo
+          {product.category}
         </button>
-        <span>/</span>
-        <span>{product.category}</span>
-        <span>/</span>
-        <span className="text-ink">{product.name}</span>
+        <span className="hidden md:inline">/</span>
+        <span className="hidden text-ink md:inline">{product.name}</span>
       </nav>
 
-      <div className="grid gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-14">
+      <div className="grid gap-6 lg:grid-cols-[1fr_1.05fr] lg:gap-14">
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <div className="aspect-[4/5] overflow-hidden rounded-[3px] bg-linen">
+          <div className="-mx-5 aspect-square overflow-hidden bg-linen sm:mx-0 sm:rounded-[3px] lg:aspect-[4/5]">
             <img src={image} alt={product.name} className="size-full object-cover" />
           </div>
         </div>
 
         <form onSubmit={submit} noValidate className="grid content-start gap-6">
           <div>
-            <h1 className="text-[clamp(2rem,3.6vw,2.6rem)] leading-tight">{product.name}</h1>
-            <p className="mt-2 font-serif text-lg italic text-muted">{product.subtitle}</p>
+            <h1 className="text-[clamp(1.8rem,3.6vw,2.6rem)] leading-tight">{product.name}</h1>
+            <p className="mt-1.5 font-serif text-[1.05rem] italic text-muted md:mt-2 md:text-lg">{product.subtitle}</p>
             <p className="mt-1 text-sm text-muted">{product.size}</p>
           </div>
           <p className="text-[1.05rem]">{product.description}</p>
@@ -156,16 +157,18 @@ export function ProductScreen({product, themes, onAddToCart, onNavigate}: Props)
 
               {product.includes && <p className="border-l-2 border-blush pl-3 text-[0.92rem] text-muted">{product.includes}</p>}
 
-              {error && <p role="alert" className="text-sm text-danger">{error}</p>}
-
-              <div className="flex items-baseline justify-between border-t border-line pt-4">
-                <span className="text-[0.95rem] text-muted">Total estimado{priceFrom ? ', a partir de' : ''}</span>
-                <strong className="font-serif text-2xl font-medium text-ink">{formatCurrency(total)}</strong>
+              <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 px-5 pb-[calc(env(safe-area-inset-bottom,0px)+0.75rem)] pt-3 backdrop-blur-md lg:static lg:z-auto lg:bg-transparent lg:p-0 lg:pt-4 lg:backdrop-blur-none">
+                {error && <p role="alert" className="mx-auto mb-2 max-w-[1180px] text-sm text-danger lg:mb-4">{error}</p>}
+                <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-4 lg:grid lg:gap-4">
+                  <div className="grid leading-tight lg:flex lg:items-baseline lg:justify-between">
+                    <span className="text-[0.8rem] text-muted lg:text-[0.95rem]">Total estimado{priceFrom ? ', a partir de' : ''}</span>
+                    <strong className="font-serif text-xl font-medium text-ink lg:text-2xl">{formatCurrency(total)}</strong>
+                  </div>
+                  <button type="submit" className="cursor-pointer whitespace-nowrap rounded-full bg-ink px-6 py-3.5 font-medium text-paper hover:opacity-90">
+                    Adicionar ao pedido
+                  </button>
+                </div>
               </div>
-
-              <button type="submit" className="cursor-pointer rounded-full bg-ink px-6 py-3.5 font-medium text-paper hover:opacity-90">
-                Adicionar ao pedido
-              </button>
             </>
           )}
         </form>

@@ -22,5 +22,5 @@ export function minPrice(product: Product) {
 }
 
 export function hasPriceFrom(product: Product) {
-  return product.variants.length > 1 || product.variants.some(variant => variant.priceFrom);
+  return new Set(product.variants.map(variant => variant.price)).size > 1 || product.variants.some(variant => variant.priceFrom);
 }

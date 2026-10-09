@@ -71,7 +71,10 @@ export interface Customer {
 }
 
 export type Route =
-  | {page: 'home'; section?: string}
+  | {page: 'home'}
+  | {page: 'catalog'; category?: string}
+  | {page: 'atelier'}
+  | {page: 'info'; section?: string}
   | {page: 'product'; id: string}
   | {page: 'admin'};
 

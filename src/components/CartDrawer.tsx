@@ -1,6 +1,6 @@
 import {X} from 'lucide-react';
 import {useEffect} from 'react';
-import {deliveryOptions} from '../data/fields';
+import {deliveryOptions, shippingOption} from '../data/fields';
 import type {CartItem, Customer} from '../types';
 import {formatCurrency} from '../utils/format';
 import {buildOrderMessage, cartTotal, whatsappUrl} from '../utils/whatsapp';
@@ -96,7 +96,7 @@ export function CartDrawer({open, items, customer, onClose, onRemove, onCustomer
               <label htmlFor="cliente-nome" className={labelClass}>Seu nome</label>
               <input id="cliente-nome" autoComplete="name" value={customer.name} onChange={event => onCustomerChange({name: event.target.value})} className={inputClass} />
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-3 min-[400px]:grid-cols-2">
               <div className="grid gap-1.5">
                 <label htmlFor="cliente-entrega" className={labelClass}>Entrega</label>
                 <select id="cliente-entrega" value={customer.delivery} onChange={event => onCustomerChange({delivery: event.target.value})} className={inputClass}>
@@ -111,7 +111,7 @@ export function CartDrawer({open, items, customer, onClose, onRemove, onCustomer
                 <input id="cliente-data" type="date" value={customer.date} onChange={event => onCustomerChange({date: event.target.value})} className={inputClass} />
               </div>
             </div>
-            {customer.delivery === 'Correios' && (
+            {customer.delivery === shippingOption && (
               <div className="grid gap-1.5">
                 <label htmlFor="cliente-cep" className={labelClass}>CEP</label>
                 <input id="cliente-cep" inputMode="numeric" autoComplete="postal-code" placeholder="00000-000" value={customer.zip} onChange={event => onCustomerChange({zip: event.target.value})} className={inputClass} />

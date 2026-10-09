@@ -1,4 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {BottomNav} from './components/BottomNav';
 import {CartDrawer} from './components/CartDrawer';
 import {Footer} from './components/Footer';
 import {Header} from './components/Header';
@@ -10,7 +11,10 @@ import {defaultThemes} from './data/fields';
 import {useCart} from './hooks/useCart';
 import {useHashRoute} from './hooks/useHashRoute';
 import {AdminScreen} from './screens/AdminScreen';
+import {AtelierScreen} from './screens/AtelierScreen';
+import {CatalogScreen} from './screens/CatalogScreen';
 import {HomeScreen} from './screens/HomeScreen';
+import {InfoScreen} from './screens/InfoScreen';
 import {ProductScreen} from './screens/ProductScreen';
 import type {AdminState, CartItem, Product} from './types';
 import {applyAdminState, emptyAdminState, loadAdminState, saveAdminState} from './utils/adminCatalog';
@@ -88,11 +92,19 @@ export default function App() {
   const product = route.page === 'product' ? products.find(item => item.id === route.id) : undefined;
   const closeCart = useCallback(() => setCartOpen(false), []);
 
+  const showBottomNav = route.page !== 'admin' && !(route.page === 'product' && product?.active);
+
   return (
     <div className="min-h-dvh">
-      <Header cartCount={cart.items.length} onCartPress={() => setCartOpen(true)} onNavigate={navigate} />
+      <Header route={route} cartCount={cart.items.length} onCartPress={() => setCartOpen(true)} onNavigate={navigate} />
 
       {route.page === 'home' && <HomeScreen products={products} onNavigate={navigate} />}
+
+      {route.page === 'catalog' && <CatalogScreen products={products} category={route.category} onNavigate={navigate} />}
+
+      {route.page === 'atelier' && <AtelierScreen onNavigate={navigate} />}
+
+      {route.page === 'info' && <InfoScreen section={route.section} onNavigate={navigate} />}
 
       {route.page === 'product' &&
         (product ? (
@@ -101,7 +113,7 @@ export default function App() {
           <main className="mx-auto grid w-[min(1180px,100%-2.5rem)] justify-items-start gap-4 py-24">
             <h1 className="text-3xl">Produto não encontrado</h1>
             <p className="text-muted">Ele pode ter sido removido do catálogo.</p>
-            <button onClick={() => navigate({page: 'home', section: 'catalogo'})} className="cursor-pointer rounded-full bg-ink px-6 py-3 font-medium text-paper">
+            <button onClick={() => navigate({page: 'catalog'})} className="cursor-pointer rounded-full bg-ink px-6 py-3 font-medium text-paper">
               Ver catálogo
             </button>
           </main>
@@ -124,6 +136,8 @@ export default function App() {
 
       {route.page !== 'admin' && <WhatsAppFab />}
 
+      {showBottomNav && <BottomNav route={route} onNavigate={navigate} />}
+
       <CartDrawer
         open={cartOpen}
         items={cart.items}
@@ -133,7 +147,7 @@ export default function App() {
         onCustomerChange={cart.setCustomer}
         onBrowse={() => {
           setCartOpen(false);
-          navigate({page: 'home', section: 'catalogo'});
+          navigate({page: 'catalog'});
         }}
       />
 

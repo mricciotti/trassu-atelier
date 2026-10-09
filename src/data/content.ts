@@ -2,9 +2,10 @@ import aparecida from '../assets/img/aparecida.jpg';
 import caixa from '../assets/img/caixa.jpg';
 import canecaouro from '../assets/img/canecaouro.jpg';
 import coracoes from '../assets/img/coracoes.jpg';
+import exclusiva from '../assets/img/exclusiva.jpg';
 import garrafa600 from '../assets/img/garrafa600.jpg';
-import garrafa900 from '../assets/img/garrafa900.jpg';
 import hero from '../assets/img/hero.jpg';
+import igreja from '../assets/img/igreja.jpg';
 import logo from '../assets/img/logo.jpg';
 import maefilha from '../assets/img/maefilha.jpg';
 import memoria from '../assets/img/memoria.jpg';
@@ -18,13 +19,24 @@ export const brand = {
   city: 'Indaiatuba, SP',
 };
 
-export const images = {logo, hero, memoria, garrafa900, singelos};
+export const images = {logo, hero, memoria, singelos, exclusiva, igreja, maefilha};
 
-export const heroPhotos = [
-  {src: memoria, alt: 'Prato pintado à mão com Oxóssi e Oxum'},
-  {src: hero, alt: 'Biscoito em glacê real com Exu e Iansã, ao lado de um prato ilustrado'},
-  {src: garrafa900, alt: 'Garrafa térmica ilustrada com símbolos dos orixás'},
-];
+export const highlights = ['Arte autoral, feita à mão', 'Entrega para todo o Brasil', 'PIX ou cartão'];
+
+export const story = {
+  intro: [
+    'Acreditamos que um presente pode carregar muito mais do que aquilo que se vê.',
+    'Foi desse olhar que nasceu a Trassu Atelier: um espaço onde porcelanas e biscoitos artesanais se transformam em presentes pensados especialmente para alguém.',
+    'Criamos para celebrar encontros, fé, conquistas, pessoas queridas e tantos outros momentos que merecem um detalhe só deles.',
+  ],
+  origin: [
+    'A Trassu Atelier foi pioneira no Brasil ao levar a estética afroreligiosa aos biscoitos decorados em glacê real. Um trabalho que nasceu do desejo de representar a fé com beleza, delicadeza e, acima de tudo, respeito.',
+    'Com o tempo, os biscoitos abriram espaço para novas formas de criar. Vieram as porcelanas, com novos traços e novas possibilidades, mas o cuidado em transformar significado em arte continuou o mesmo.',
+  ],
+  teaser:
+    'Pioneira no Brasil ao levar a estética afroreligiosa aos biscoitos decorados em glacê real, a Trassu transforma fé, encontros e pessoas queridas em arte feita à mão.',
+  quote: 'Porque alguns momentos passam. Outros merecem permanecer.',
+};
 
 export const gallery = [
   {src: caixa, alt: 'Biscoito com pedido de madrinha em caixa de MDF com mini buquê'},
@@ -39,7 +51,7 @@ export const steps = [
   {title: 'Monte seu pedido', text: 'Escolha os produtos e conte a personalização: nomes, datas, frases, orixá ou tema.'},
   {title: 'Finalize no WhatsApp', text: 'Seu pedido chega pronto, com o resumo de tudo. Ali alinhamos detalhes, prazo e frete.'},
   {title: 'Confirme o pagamento', text: 'Pagamento integral antes da produção, por PIX ou cartão. A encomenda é confirmada com o comprovante.'},
-  {title: 'Receba com cuidado', text: 'Retire em Indaiatuba, receba por motoboy na região ou pelos Correios em todo o Brasil.'},
+  {title: 'Receba com cuidado', text: 'Retire em Indaiatuba, receba por motoboy na região ou pelos Correios e transportadora em todo o Brasil.'},
 ];
 
 export const careItems = [
@@ -48,14 +60,15 @@ export const careItems = [
     items: [
       'Lave à mão, com detergente neutro e esponja macia.',
       'Não use palha de aço, produtos abrasivos ou esponjas ásperas.',
-      'Evite esfregar diretamente sobre a arte e deixar de molho por muito tempo.',
+      'Evite esfregar diretamente sobre a personalização.',
+      'Não deixe a peça de molho por longos períodos.',
       'Não leve à lava-louças nem ao micro-ondas.',
-      'Evite impactos, riscos e mudanças bruscas de temperatura.',
+      'Evite impactos, riscos, atritos sobre a arte e mudanças bruscas de temperatura.',
     ],
   },
   {
     title: 'Impressão em relevo (DTF UV)',
-    text: 'A arte é impressa em um filme especial e transferida para a peça, formando uma fina camada sobre ela. Por ser uma aplicação externa, pode ter desgaste natural com o uso e o atrito.',
+    text: 'A arte é impressa em um filme especial e transferida para a peça, formando uma fina camada sobre ela. Por ser uma aplicação externa, pode ter desgaste natural com o uso e o atrito ao longo do tempo.',
   },
   {
     title: 'Pintura à mão',
@@ -66,11 +79,11 @@ export const careItems = [
 export const deliveryInfo = [
   {
     title: 'Pagamento',
-    text: 'Integral após a definição do pedido e antes do início da produção. PIX ou cartão de crédito via Infinity Pay, com taxas de parcelamento a partir de 6%.',
+    text: 'Integral após a definição do pedido e antes do início da produção. PIX ou cartão de crédito via Infinity Pay, com taxas de parcelamento a partir de 4%. A encomenda é confirmada após o envio do comprovante.',
   },
   {
     title: 'Retirada e entrega',
-    text: 'Retirada em Indaiatuba (SP), motoboy para Indaiatuba e região ou Correios para todo o Brasil. Frete e eventual taxa de deslocamento são informados no orçamento.',
+    text: 'Retirada em Indaiatuba (SP), motoboy ou Uber para Indaiatuba e região, Correios ou transportadora para todo o Brasil. Frete e eventual taxa de deslocamento para postagem são informados no orçamento.',
   },
   {
     title: 'Prazos',
@@ -90,6 +103,10 @@ export const faq = [
   {
     q: 'Qual o pedido mínimo dos carimbadinhos?',
     a: '50 unidades. Para arte exclusiva ou logotipo, há uma taxa única de R$ 40,00 para criar o carimbo, que pode ser reutilizado em novos pedidos.',
+  },
+  {
+    q: 'O que vem nos modelos para presentear?',
+    a: 'Todos acompanham caixa em MDF, palha interna, acabamento em chiffon off-white e lapela com flores e folhagens secas. Você pode incluir um nome ou frase.',
   },
   {
     q: 'Como envio a foto para a arte exclusiva?',

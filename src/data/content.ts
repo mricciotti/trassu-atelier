@@ -8,8 +8,6 @@ import hero from '../assets/img/hero.jpg';
 import igreja from '../assets/img/igreja.jpg';
 import logo from '../assets/img/logo.jpg';
 import maefilha from '../assets/img/maefilha.jpg';
-import memoria from '../assets/img/memoria.jpg';
-import singelos from '../assets/img/singelos.jpg';
 
 export const brand = {
   name: 'Trassu Atelier',
@@ -19,7 +17,7 @@ export const brand = {
   city: 'Indaiatuba, SP',
 };
 
-export const images = {logo, hero, memoria, singelos, exclusiva, igreja, maefilha};
+export const images = {logo, hero, exclusiva, igreja};
 
 export const highlights = ['Arte autoral, feita à mão', 'Entrega para todo o Brasil', 'PIX ou cartão'];
 

@@ -1,7 +1,7 @@
 import {ClipboardList, Flower2, House, LayoutGrid, type LucideIcon} from 'lucide-react';
 import type {Route} from '../types';
 
-export interface NavItem {
+interface NavItem {
   label: string;
   short: string;
   route: Route;

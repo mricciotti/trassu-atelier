@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {BottomNav} from './components/BottomNav';
 import {CartDrawer} from './components/CartDrawer';
 import {Footer} from './components/Footer';
@@ -10,79 +10,21 @@ import {catalog} from './data/catalog';
 import {defaultThemes} from './data/fields';
 import {useCart} from './hooks/useCart';
 import {useHashRoute} from './hooks/useHashRoute';
-import {AdminScreen} from './screens/AdminScreen';
 import {AtelierScreen} from './screens/AtelierScreen';
 import {CatalogScreen} from './screens/CatalogScreen';
 import {HomeScreen} from './screens/HomeScreen';
 import {InfoScreen} from './screens/InfoScreen';
 import {ProductScreen} from './screens/ProductScreen';
-import type {AdminState, CartItem, Product} from './types';
-import {applyAdminState, emptyAdminState, loadAdminState, saveAdminState} from './utils/adminCatalog';
+import type {CartItem} from './types';
 
 const SHOW_WATERMARK = true;
-
-function diffFromBase(base: Product, next: Partial<Product>) {
-  return Object.fromEntries(
-    Object.entries(next).filter(([key, value]) => JSON.stringify(base[key as keyof Product]) !== JSON.stringify(value)),
-  ) as Partial<Product>;
-}
 
 export default function App() {
   const {route, navigate} = useHashRoute();
   const cart = useCart();
   const [cartOpen, setCartOpen] = useState(false);
-  const [admin, setAdmin] = useState<AdminState>(() => loadAdminState());
-  const [toast, setToast] = useState<string | null>(null);
-  const toastTimer = useRef<number>();
-
-  const products = useMemo(() => applyAdminState(catalog, admin), [admin]);
-  const themes = admin.themes ?? defaultThemes;
-
-  const notify = useCallback((message: string) => {
-    setToast(message);
-    window.clearTimeout(toastTimer.current);
-    toastTimer.current = window.setTimeout(() => setToast(null), 3200);
-  }, []);
-
-  useEffect(() => () => window.clearTimeout(toastTimer.current), []);
-
-  function commit(next: AdminState, message?: string) {
-    setAdmin(next);
-    if (!saveAdminState(next)) {
-      notify('Não foi possível salvar no navegador. Tente uma foto menor.');
-    } else if (message) {
-      notify(message);
-    }
-  }
-
-  function updateProduct(id: string, changes: Partial<Product>) {
-    const custom = admin.custom.find(product => product.id === id);
-    if (custom) {
-      commit({...admin, custom: admin.custom.map(product => (product.id === id ? {...product, ...changes} : product))}, 'Alteração salva');
-      return;
-    }
-    const base = catalog.find(product => product.id === id);
-    if (!base) return;
-    const merged = {...admin.overrides[id], ...changes};
-    commit({...admin, overrides: {...admin.overrides, [id]: diffFromBase(base, merged)}}, 'Alteração salva');
-  }
-
-  function saveProduct(product: Product) {
-    const base = catalog.find(item => item.id === product.id);
-    if (base) {
-      commit({...admin, overrides: {...admin.overrides, [product.id]: diffFromBase(base, product)}}, 'Produto atualizado');
-      return;
-    }
-    const exists = admin.custom.some(item => item.id === product.id);
-    const custom = exists
-      ? admin.custom.map(item => (item.id === product.id ? product : item))
-      : [...admin.custom, {...product, custom: true}];
-    commit({...admin, custom}, exists ? 'Produto atualizado' : 'Produto cadastrado');
-  }
-
-  function deleteProduct(id: string) {
-    commit({...admin, custom: admin.custom.filter(product => product.id !== id)}, 'Produto excluído');
-  }
+  const products = catalog;
+  const themes = defaultThemes;
 
   function addToCart(item: CartItem) {
     cart.add(item);
@@ -92,7 +34,7 @@ export default function App() {
   const product = route.page === 'product' ? products.find(item => item.id === route.id) : undefined;
   const closeCart = useCallback(() => setCartOpen(false), []);
 
-  const showBottomNav = route.page !== 'admin' && !(route.page === 'product' && product?.active);
+  const showBottomNav = !(route.page === 'product' && product?.active);
 
   return (
     <div className="min-h-dvh">
@@ -119,22 +61,9 @@ export default function App() {
           </main>
         ))}
 
-      {route.page === 'admin' && (
-        <AdminScreen
-          products={products}
-          themes={themes}
-          onUpdateProduct={updateProduct}
-          onSaveProduct={saveProduct}
-          onDeleteProduct={deleteProduct}
-          onThemesChange={next => commit({...admin, themes: next}, next ? 'Temas atualizados' : 'Lista original restaurada')}
-          onResetAll={() => commit(emptyAdminState, 'Catálogo original restaurado')}
-          onNavigate={navigate}
-        />
-      )}
-
       <Footer onNavigate={navigate} />
 
-      {route.page !== 'admin' && <WhatsAppFab />}
+      <WhatsAppFab />
 
       {showBottomNav && <BottomNav route={route} onNavigate={navigate} />}
 
@@ -151,7 +80,7 @@ export default function App() {
         }}
       />
 
-      <Toast message={toast} />
+      <Toast message={null} />
       {SHOW_WATERMARK && <WatermarkOverlay />}
     </div>
   );

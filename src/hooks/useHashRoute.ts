@@ -15,7 +15,6 @@ function parse(hash: string): Route {
   if (head === 'catalogo') return {page: 'catalog', category: tail};
   if (head === 'atelier') return {page: 'atelier'};
   if (head === 'encomendas') return {page: 'info', section: tail};
-  if (head === 'admin') return {page: 'admin'};
   return legacy[head] ?? {page: 'home'};
 }
 
@@ -29,8 +28,6 @@ function toHash(route: Route) {
       return '#/atelier';
     case 'info':
       return route.section ? `#/encomendas/${route.section}` : '#/encomendas';
-    case 'admin':
-      return '#/admin';
     default:
       return '#/';
   }
@@ -41,7 +38,12 @@ export function useHashRoute() {
   const previousPage = useRef<Route['page']>();
 
   useEffect(() => {
-    const onChange = () => setRoute(parse(window.location.hash));
+    const onChange = () => {
+      const next = parse(window.location.hash);
+      if (next.page === 'home' && window.location.hash !== '#/') window.history.replaceState(null, '', '#/');
+      setRoute(next);
+    };
+    onChange();
     window.addEventListener('hashchange', onChange);
     return () => window.removeEventListener('hashchange', onChange);
   }, []);

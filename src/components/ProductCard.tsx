@@ -1,6 +1,5 @@
 import type {Product} from '../types';
-import {formatCurrency} from '../utils/format';
-import {hasPriceFrom, minPrice} from '../utils/adminCatalog';
+import {formatCurrency, hasPriceFrom, minPrice} from '../utils/format';
 
 interface Props {
   product: Product;

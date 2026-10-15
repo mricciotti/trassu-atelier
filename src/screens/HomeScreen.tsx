@@ -6,8 +6,7 @@ import {sectionTitle, textLink, wrap} from '../components/layoutStyles';
 import {categories, categoryDetails} from '../data/catalog';
 import {highlights, images, story} from '../data/content';
 import type {Product, Route} from '../types';
-import {minPrice} from '../utils/adminCatalog';
-import {formatCurrency} from '../utils/format';
+import {formatCurrency, minPrice} from '../utils/format';
 import {whatsappUrl} from '../utils/whatsapp';
 
 interface Props {

@@ -1,4 +1,4 @@
-import {Settings2, ShoppingBag} from 'lucide-react';
+import {ShoppingBag} from 'lucide-react';
 import type {Route} from '../types';
 import {BrandMark} from './BrandMark';
 import {isActive, navItems} from './navigation';
@@ -27,13 +27,6 @@ export function Header({route, cartCount, onCartPress, onNavigate}: Props) {
           ))}
         </nav>
         <div className="flex items-center gap-1.5 md:gap-2">
-          <button
-            onClick={() => onNavigate({page: 'admin'})}
-            aria-label="Painel da loja"
-            title="Painel da loja"
-            className="hidden size-10 cursor-pointer place-items-center rounded-full text-muted hover:bg-linen hover:text-ink min-[400px]:grid">
-            <Settings2 className="size-[18px]" strokeWidth={1.5} />
-          </button>
           <button
             onClick={onCartPress}
             className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-full border border-line px-3.5 text-[0.95rem] hover:border-ink-soft md:px-4">

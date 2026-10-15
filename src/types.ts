@@ -41,7 +41,6 @@ export interface Product {
   includes?: string;
   featured?: boolean;
   active: boolean;
-  custom?: boolean;
 }
 
 export interface CartDetail {
@@ -75,11 +74,4 @@ export type Route =
   | {page: 'catalog'; category?: string}
   | {page: 'atelier'}
   | {page: 'info'; section?: string}
-  | {page: 'product'; id: string}
-  | {page: 'admin'};
-
-export interface AdminState {
-  overrides: Record<string, Partial<Product>>;
-  custom: Product[];
-  themes: string[] | null;
-}
+  | {page: 'product'; id: string};

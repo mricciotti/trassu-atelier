@@ -32,7 +32,6 @@ export function Footer({onNavigate}: Props) {
           <ul className="grid gap-1">
             <li><button className={link} onClick={go({page: 'atelier'})}>Nossa história</button></li>
             <li><button className={link} onClick={go({page: 'info', section: 'cuidados'})}>Cuidados com a peça</button></li>
-            <li><button className={link} onClick={go({page: 'admin'})}>Painel da loja</button></li>
           </ul>
         </div>
         <div className="col-span-2 lg:col-span-1">

@@ -1,6 +1,6 @@
 export type Category = 'Biscoitos' | 'Porcelanas' | 'Garrafas' | 'Para presentear';
 
-export type FieldType = 'text' | 'textarea' | 'theme' | 'occasion';
+export type FieldType = 'text' | 'textarea' | 'theme' | 'occasion' | 'select';
 
 export interface PersonalizationField {
   id: string;
@@ -8,6 +8,7 @@ export interface PersonalizationField {
   type: FieldType;
   placeholder?: string;
   required?: boolean;
+  options?: string[];
 }
 
 export interface Variant {
@@ -54,6 +55,7 @@ export interface CartItem {
   name: string;
   image: string;
   variantName: string;
+  variantId?: string;
   unitPrice: number;
   priceFrom: boolean;
   quantity: number;

@@ -6,6 +6,7 @@ import {WhatsAppIcon} from '../components/WhatsAppIcon';
 import {categoryDetails} from '../data/catalog';
 import type {CartItem, Product, Route} from '../types';
 import {formatCurrency} from '../utils/format';
+import {lineTotal, quantityFor} from '../utils/order';
 import {whatsappUrl} from '../utils/whatsapp';
 
 interface Props {
@@ -25,7 +26,7 @@ export function ProductScreen({product, themes, onAddToCart, onNavigate}: Props)
 
   const variant = product.variants.find(item => item.id === variantId) ?? product.variants[0];
   const extraPrice = product.extra && withExtra ? product.extra.price : 0;
-  const total = variant.price * quantity + extraPrice;
+  const total = lineTotal(variant.price, quantity, extraPrice);
   const priceFrom = Boolean(variant.priceFrom);
   const image = variant.image ?? product.image;
 
@@ -39,9 +40,9 @@ export function ProductScreen({product, themes, onAddToCart, onNavigate}: Props)
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (quantity < product.minQty) {
-      setQuantity(product.minQty);
-      setError(`A quantidade mínima deste produto é ${product.minQty} unidades.`);
+    if (!Number.isInteger(quantity) || quantity < product.minQty || quantity !== quantityFor(product, quantity)) {
+      setQuantity(quantityFor(product, quantity));
+      setError(`Confira a quantidade. Pedido mínimo: ${product.minQty} unidades.`);
       return;
     }
     const missing = product.fields.filter(field => field.required && !values[field.id]?.trim());
@@ -63,6 +64,7 @@ export function ProductScreen({product, themes, onAddToCart, onNavigate}: Props)
       name: product.name,
       image,
       variantName: product.variants.length > 1 ? variant.name : '',
+      variantId: variant.id,
       unitPrice: variant.price,
       priceFrom,
       quantity,
@@ -95,7 +97,7 @@ export function ProductScreen({product, themes, onAddToCart, onNavigate}: Props)
           </div>
         </div>
 
-        <form onSubmit={submit} noValidate className="grid content-start gap-6">
+        <form onSubmit={submit} noValidate className="grid content-start gap-6 pb-32 lg:pb-0">
           <div>
             <h1 className="text-[clamp(1.8rem,3.6vw,2.6rem)] leading-tight">{product.name}</h1>
             <p className="mt-1.5 font-serif text-[1.05rem] italic text-muted md:mt-2 md:text-lg">{product.subtitle}</p>
@@ -135,6 +137,11 @@ export function ProductScreen({product, themes, onAddToCart, onNavigate}: Props)
                 </fieldset>
               )}
 
+              {product.id === 'prato-memoria' && (
+                <p className="text-sm text-muted">
+                  Artes do atelier utilizam composições disponíveis. Artes exclusivas são criadas a partir de foto, referência ou ideia; envie a referência pelo WhatsApp.
+                </p>
+              )}
               <PersonalizationFields fields={product.fields} values={values} themes={themes} invalid={invalid} onChange={updateValue} />
 
               {product.extra && (
@@ -157,14 +164,14 @@ export function ProductScreen({product, themes, onAddToCart, onNavigate}: Props)
 
               {product.includes && <p className="border-l-2 border-blush pl-3 text-[0.92rem] text-muted">{product.includes}</p>}
 
-              <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 px-5 pb-[calc(env(safe-area-inset-bottom,0px)+0.75rem)] pt-3 backdrop-blur-md lg:static lg:z-auto lg:bg-transparent lg:p-0 lg:pt-4 lg:backdrop-blur-none">
+              <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 px-3 pb-[calc(env(safe-area-inset-bottom,0px)+0.5rem)] pt-2.5 backdrop-blur-md sm:px-5 lg:static lg:z-auto lg:bg-transparent lg:p-0 lg:pt-4 lg:backdrop-blur-none">
                 {error && <p role="alert" className="mx-auto mb-2 max-w-[1180px] text-sm text-danger lg:mb-4">{error}</p>}
-                <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-4 lg:grid lg:gap-4">
+                <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-2.5 lg:grid lg:gap-4">
                   <div className="grid leading-tight lg:flex lg:items-baseline lg:justify-between">
-                    <span className="text-[0.8rem] text-muted lg:text-[0.95rem]">Total estimado{priceFrom ? ', a partir de' : ''}</span>
-                    <strong className="font-serif text-xl font-medium text-ink lg:text-2xl">{formatCurrency(total)}</strong>
+                    <span className="text-[0.75rem] text-muted lg:text-[0.95rem]">Total estimado{priceFrom ? ', a partir de' : ''}</span>
+                    <strong className="font-serif text-lg font-medium text-ink min-[370px]:text-xl lg:text-2xl">{formatCurrency(total)}</strong>
                   </div>
-                  <button type="submit" className="cursor-pointer whitespace-nowrap rounded-full bg-ink px-6 py-3.5 font-medium text-paper hover:opacity-90">
+                  <button type="submit" className="min-h-11 shrink-0 cursor-pointer rounded-full bg-ink px-3 py-2.5 text-[0.85rem] font-medium text-paper hover:opacity-90 min-[370px]:px-5 min-[370px]:text-base lg:px-6 lg:py-3.5">
                     Adicionar ao pedido
                   </button>
                 </div>

@@ -37,7 +37,7 @@ export function ProductCard({product, onOpen}: Props) {
       {product.minQty > 1 && (
         <span className="text-[0.8rem] font-medium text-rosewood md:text-sm">Mínimo de {product.minQty} unidades</span>
       )}
-      <span className="hidden text-[0.95rem] font-medium text-ink underline decoration-blush underline-offset-[5px] md:inline">Personalizar</span>
+      <span className="inline-flex min-h-9 items-center text-[0.88rem] font-medium text-ink underline decoration-blush underline-offset-[5px] md:text-[0.95rem]">Ver opções →</span>
     </button>
   );
 }

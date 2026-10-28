@@ -29,10 +29,10 @@ export function PersonalizationFields({fields, values, themes, invalid, onChange
               {field.label}
               {field.required && <span className="text-rosewood"> *</span>}
             </label>
-            {field.type === 'occasion' && (
+            {(field.type === 'occasion' || field.type === 'select') && (
               <select id={id} value={value} onChange={event => onChange(field.id, event.target.value)} className={className}>
                 <option value="">Selecione</option>
-                {occasions.map(occasion => (
+                {(field.type === 'occasion' ? occasions : field.options ?? []).map(occasion => (
                   <option key={occasion}>{occasion}</option>
                 ))}
               </select>

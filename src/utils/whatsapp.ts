@@ -1,38 +1,45 @@
 import {brand} from '../data/content';
 import type {CartItem, Customer} from '../types';
 import {formatCurrency} from './format';
+import {orderTotal} from './order';
 
-export function cartTotal(items: CartItem[]) {
-  return items.reduce((sum, item) => sum + item.total, 0);
-}
+export const cartTotal = orderTotal;
 
 export function buildOrderMessage(items: CartItem[], customer: Customer) {
-  const lines = ['Olá, Trassu Atelier! Montei este pedido pelo site:', ''];
+  if (!items.length) return '';
+  const lines = ['Olá! Gostaria de fazer uma encomenda na Trassu Atelier.', ''];
 
   items.forEach((item, index) => {
-    lines.push(`${index + 1}. ${item.name}${item.variantName ? ` — ${item.variantName}` : ''}`);
+    lines.push(`${index + 1}. ${item.name}`);
+    if (item.variantName) lines.push(`   Opção: ${item.variantName}`);
     lines.push(`   Quantidade: ${item.quantity} × ${formatCurrency(item.unitPrice)}${item.priceFrom ? ' (a partir de)' : ''}`);
-    item.details.forEach(detail => lines.push(`   ${detail.label}: ${detail.value}`));
-    lines.push(`   Subtotal: ${formatCurrency(item.total)}`);
+    item.details.forEach(detail => {
+      if (detail.label !== 'Carimbo exclusivo') lines.push(`   ${detail.label}: ${detail.value}`);
+    });
+    if (item.extraPrice) lines.push(`   Criação do carimbo (taxa única): ${formatCurrency(item.extraPrice)}`);
+    lines.push(`   Subtotal: ${formatCurrency(item.total)}${item.priceFrom ? ' (a partir de)' : ''}`);
     lines.push('');
   });
 
   const anyFrom = items.some(item => item.priceFrom);
-  lines.push(`Total estimado: ${formatCurrency(cartTotal(items))}${anyFrom ? ' (valores a partir de)' : ''}`);
-  lines.push('Frete e forma de pagamento a combinar.');
+  lines.push(`Total estimado dos itens: ${formatCurrency(orderTotal(items))}${anyFrom ? ' (valores a partir de)' : ''}`);
+  lines.push('Frete, prazo de produção e valores sujeitos a orçamento serão confirmados pelo atelier.');
+  lines.push('Este pedido ainda não foi confirmado nem pago.');
+  if (items.some(item => item.productId === 'carimbadinhos')) {
+    lines.push('Reutilização de carimbo e pedidos com várias artes: confirmar com o atelier.');
+  }
 
   const extra: string[] = [];
-  if (customer.name) extra.push(`Nome: ${customer.name}`);
+  if (typeof customer.name === 'string' && customer.name.trim()) extra.push(`Nome: ${customer.name.trim()}`);
   if (customer.delivery) {
-    const zip = customer.delivery === 'Correios' && customer.zip ? ` — CEP ${customer.zip}` : '';
+    const zip = customer.delivery === 'Correios ou transportadora' && typeof customer.zip === 'string' && customer.zip.trim() ? ` — CEP ${customer.zip.trim()}` : '';
     extra.push(`Entrega: ${customer.delivery}${zip}`);
   }
-  if (customer.date) {
-    extra.push(`Preciso receber até: ${new Date(`${customer.date}T12:00`).toLocaleDateString('pt-BR')}`);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(customer.date)) {
+    const [year, month, day] = customer.date.split('-');
+    extra.push(`Data desejada: ${day}/${month}/${year} (a confirmar)`);
   }
-  if (extra.length) {
-    lines.push('', ...extra);
-  }
+  if (extra.length) lines.push('', ...extra);
 
   return lines.join('\n');
 }

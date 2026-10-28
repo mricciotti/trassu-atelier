@@ -29,7 +29,7 @@ export function CatalogScreen({products, category: slug, onNavigate}: Props) {
       </div>
 
       <div className="sticky top-[calc(env(safe-area-inset-top,0px)+60px)] z-30 mt-5 border-b border-line bg-paper/95 backdrop-blur-md md:top-[calc(env(safe-area-inset-top,0px)+68px)] md:mt-8">
-        <div role="group" aria-label="Filtrar por categoria" className={`${wrap} scrollbar-none flex gap-2 overflow-x-auto py-3`}>
+        <div role="group" aria-label="Filtrar por categoria" className={`${wrap} scrollbar-none flex gap-2 overflow-x-auto py-3 pr-12`}>
           {options.map(option => (
             <button
               key={option.label}
@@ -40,9 +40,10 @@ export function CatalogScreen({products, category: slug, onNavigate}: Props) {
             </button>
           ))}
         </div>
+
       </div>
 
-      <div className={`${wrap} pt-6 md:pt-10`}>
+      <div id="resultados-catalogo" className={`${wrap} scroll-mt-36 pt-6 md:pt-10`}>
         <p className="mb-4 text-sm text-muted md:mb-6">
           {visible.length} {visible.length === 1 ? 'produto' : 'produtos'}
         </p>

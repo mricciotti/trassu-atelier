@@ -45,7 +45,7 @@ export const catalog: Product[] = [
     image: carimbadinho,
     variants: [{id: 'unidade', name: 'Unidade', price: 2.5}],
     minQty: 50,
-    step: 10,
+    step: 1,
     extra: {
       label: 'Carimbo com arte exclusiva ou logotipo',
       price: 40,
@@ -218,7 +218,15 @@ export const catalog: Product[] = [
     minQty: 1,
     step: 1,
     includes: giftIncludes,
-    fields: [preset('notes', {label: 'Modelo da garrafa', placeholder: 'Ex.: com canudo, 900 ml', required: true}), ...giftFields],
+    fields: [
+      {id: 'bottle', label: 'Modelo e tamanho da garrafa', type: 'select', required: true, options: [
+        'Com canudo · 600 ml',
+        'Com canudo · 900 ml',
+        'Com infusor · 600 ml',
+        'Com infusor · 1000 ml',
+      ]},
+      ...giftFields,
+    ],
     active: true,
   },
 ];

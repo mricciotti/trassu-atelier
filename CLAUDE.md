@@ -51,7 +51,7 @@ src/
 - Valores são "estimados"; aparecem como "a partir de" quando há `priceFrom` ou variantes com preços diferentes
 - "Para presentear" são os 4 kits do PDF (Modelo 1 a 4: R$ 69, 119, 129, a partir de 149), todos com caixa MDF, palha, chiffon e lapela de flores secas
 - Garrafa Entre-Guias: com canudo (600 ml R$ 99, 900 ml R$ 129) ou com infusor (600 ml R$ 99, 1000 ml R$ 139)
-- `minQty` e `step` por produto (Carimbadinhos: mínimo 50, de 10 em 10, extra de R$ 40 pelo carimbo exclusivo)
+- `minQty` e `step` por produto (Carimbadinhos: mínimo 50, incremento de 1 unidade, extra de R$ 40 (taxa única pelo carimbo exclusivo))
 - Produto com `active: false` aparece como "Indisponível no momento" e a página troca o formulário por um botão de WhatsApp
 - `featured` alimenta a seção "Destaques do atelier"
 

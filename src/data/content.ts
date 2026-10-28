@@ -77,7 +77,7 @@ export const careItems = [
 export const deliveryInfo = [
   {
     title: 'Pagamento',
-    text: 'Integral após a definição do pedido e antes do início da produção. PIX ou cartão de crédito via Infinity Pay, com taxas de parcelamento a partir de 4%. A encomenda é confirmada após o envio do comprovante.',
+    text: 'Integral após a definição do pedido e antes do início da produção. PIX ou cartão de crédito via InfinitePay, com taxas de parcelamento a partir de 4%. A encomenda é confirmada após o envio do comprovante.',
   },
   {
     title: 'Retirada e entrega',

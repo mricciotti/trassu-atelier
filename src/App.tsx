@@ -63,7 +63,7 @@ export default function App() {
 
       <Footer onNavigate={navigate} />
 
-      <WhatsAppFab />
+      {!(route.page === 'product' && product?.active) && <WhatsAppFab />}
 
       {showBottomNav && <BottomNav route={route} onNavigate={navigate} />}
 
@@ -73,6 +73,7 @@ export default function App() {
         customer={cart.customer}
         onClose={closeCart}
         onRemove={cart.remove}
+        onQuantityChange={cart.updateQuantity}
         onCustomerChange={cart.setCustomer}
         onBrowse={() => {
           setCartOpen(false);
